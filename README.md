@@ -38,5 +38,6 @@
 
 ### 2.2 **API 상세 파일**
 
-[api-docs.json](https://github.com/user-attachments/files/18902253/api-docs.json)
+[api-docs.json](https://github.com/user-attachments/files/18902264/api-docs.json)
+
 

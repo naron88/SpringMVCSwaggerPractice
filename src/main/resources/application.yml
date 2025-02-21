@@ -1,0 +1,26 @@
+spring:
+  application:
+    name: discodeit
+
+discodeit:
+  repository:
+    type: file  # jcf | file
+    file-directory: .discodeit
+    binaryContent-json-path: "binaryContents.json"
+    channel-json-path: "channels.json"
+    message-json-path: "messages.json"
+    readStatus-json-path: "readStatuses.json"
+    user-json-path: "users.json"
+    userStatus-json-path: "userStatuses.json"
+
+springdoc:
+  api-docs:
+    enabled: true
+    path: /v3/api-docs
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+    operationsSorter: method  # 메서드 정렬 방식 설정
+    tagsSorter: alpha  # 태그 정렬 방식 설정
+  cache:
+    disabled: true  # 개발 중에는 캐싱 비활성화

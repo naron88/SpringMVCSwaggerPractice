@@ -1,7 +1,7 @@
 package com.sprint.mission.discodeit.controller.api;
 
 
-import com.sprint.mission.discodeit.entity.BinaryContent;
+import com.sprint.mission.discodeit.dto.binaryContentDto.BinaryContentDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -22,25 +22,24 @@ public interface BinaryContentApi {
   @ApiResponses(value = {
       @ApiResponse(
           responseCode = "200", description = "첨부 파일 조회 성공",
-          content = @Content(schema = @Schema(implementation = BinaryContent.class))
+          content = @Content(schema = @Schema(implementation = BinaryContentDto.class))
       ),
       @ApiResponse(
           responseCode = "404", description = "첨부 파일을 찾을 수 없음",
-          content = @Content(examples = @ExampleObject(value = "BinaryContent with id {binaryContentId} not found"))
+          content = @Content(examples = @ExampleObject(value = "BinaryContent not found: BinaryContentId = {binaryContentId}"))
       )
   })
-  ResponseEntity<BinaryContent> find(
+  ResponseEntity<BinaryContentDto> getFile(
       @Parameter(description = "조회할 첨부 파일 ID") UUID binaryContentId
   );
 
   @Operation(summary = "여러 첨부 파일 조회")
   @ApiResponses(value = {
-      @ApiResponse(
-          responseCode = "200", description = "첨부 파일 목록 조회 성공",
-          content = @Content(array = @ArraySchema(schema = @Schema(implementation = BinaryContent.class)))
+      @ApiResponse(responseCode = "200", description = "첨부 파일 목록 조회 성공",
+          content = @Content(array = @ArraySchema(schema = @Schema(implementation = BinaryContentDto.class)))
       )
   })
-  ResponseEntity<List<BinaryContent>> findAllByIdIn(
+  ResponseEntity<List<BinaryContentDto>> getFiles(
       @Parameter(description = "조회할 첨부 파일 ID 목록") List<UUID> binaryContentIds
   );
 }

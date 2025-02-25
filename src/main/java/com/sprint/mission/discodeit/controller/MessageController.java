@@ -1,10 +1,10 @@
 package com.sprint.mission.discodeit.controller;
 
 import com.sprint.mission.discodeit.controller.api.MessageApi;
-import com.sprint.mission.discodeit.dto.request.BinaryContentCreateRequest;
-import com.sprint.mission.discodeit.dto.request.MessageCreateRequest;
-import com.sprint.mission.discodeit.dto.request.MessageUpdateRequest;
-import com.sprint.mission.discodeit.entity.Message;
+import com.sprint.mission.discodeit.dto.messageDto.MessageDto;
+import com.sprint.mission.discodeit.dto.binaryContentDto.BinaryContentCreateRequest;
+import com.sprint.mission.discodeit.dto.messageDto.MessageCreateRequest;
+import com.sprint.mission.discodeit.dto.messageDto.MessageUpdateRequest;
 import com.sprint.mission.discodeit.service.MessageService;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -27,18 +27,19 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-@RequiredArgsConstructor
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/messages")
 public class MessageController implements MessageApi {
 
   private final MessageService messageService;
 
+  // 메세지 전송
+  @Override
   @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-  public ResponseEntity<Message> create(
-      @RequestPart("messageCreateRequest") MessageCreateRequest messageCreateRequest,
-      @RequestPart(value = "attachments", required = false) List<MultipartFile> attachments
-  ) {
+  public ResponseEntity<MessageDto> createMessage(
+      @RequestPart MessageCreateRequest messageCreateRequest,
+      @RequestPart(required = false) List<MultipartFile> attachments) {
     List<BinaryContentCreateRequest> attachmentRequests = Optional.ofNullable(attachments)
         .map(files -> files.stream()
             .map(file -> {
@@ -54,35 +55,35 @@ public class MessageController implements MessageApi {
             })
             .toList())
         .orElse(new ArrayList<>());
-    Message createdMessage = messageService.create(messageCreateRequest, attachmentRequests);
-    return ResponseEntity
-        .status(HttpStatus.CREATED)
-        .body(createdMessage);
+    MessageDto messageDto = messageService.create(messageCreateRequest, attachmentRequests);
+    return ResponseEntity.status(HttpStatus.CREATED).body(messageDto);
   }
 
-  @PatchMapping(path = "{messageId}")
-  public ResponseEntity<Message> update(@PathVariable("messageId") UUID messageId,
+  // 메세지 수정
+  @Override
+  @PatchMapping("/{messageId}")
+  public ResponseEntity<MessageDto> updateMessage(
+      @PathVariable UUID messageId,
       @RequestBody MessageUpdateRequest request) {
-    Message updatedMessage = messageService.update(messageId, request);
-    return ResponseEntity
-        .status(HttpStatus.OK)
-        .body(updatedMessage);
+    MessageDto messageDto = messageService.update(messageId, request);
+    return ResponseEntity.ok(messageDto);
   }
 
-  @DeleteMapping(path = "{messageId}")
-  public ResponseEntity<Void> delete(@PathVariable("messageId") UUID messageId) {
+  // 메세지 삭제
+  @Override
+  @DeleteMapping("/{messageId}")
+  public ResponseEntity<Void> deleteMessage(
+      @PathVariable UUID messageId) {
     messageService.delete(messageId);
-    return ResponseEntity
-        .status(HttpStatus.NO_CONTENT)
-        .build();
+    return ResponseEntity.noContent().build();
   }
 
+  // 특정 채널 메세지 조회
+  @Override
   @GetMapping
-  public ResponseEntity<List<Message>> findAllByChannelId(
-      @RequestParam("channelId") UUID channelId) {
-    List<Message> messages = messageService.findAllByChannelId(channelId);
-    return ResponseEntity
-        .status(HttpStatus.OK)
-        .body(messages);
+  public ResponseEntity<List<MessageDto>> getMessagesOfChannel(
+      @RequestParam UUID channelId) {
+    List<MessageDto> messages = messageService.findAllByChannelId(channelId);
+    return ResponseEntity.ok(messages);
   }
 }

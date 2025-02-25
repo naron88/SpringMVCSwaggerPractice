@@ -1,8 +1,9 @@
 package com.sprint.mission.discodeit.controller.api;
 
 
-import com.sprint.mission.discodeit.dto.request.ReadStatusCreateRequest;
-import com.sprint.mission.discodeit.dto.request.ReadStatusUpdateRequest;
+import com.sprint.mission.discodeit.dto.readStatusDto.ReadStatusCreateRequest;
+import com.sprint.mission.discodeit.dto.readStatusDto.ReadStatusDto;
+import com.sprint.mission.discodeit.dto.readStatusDto.ReadStatusUpdateRequest;
 import com.sprint.mission.discodeit.entity.ReadStatus;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -24,18 +25,18 @@ public interface ReadStatusApi {
   @ApiResponses(value = {
       @ApiResponse(
           responseCode = "201", description = "Message 읽음 상태가 성공적으로 생성됨",
-          content = @Content(schema = @Schema(implementation = ReadStatus.class))
+          content = @Content(schema = @Schema(implementation = ReadStatusDto.class))
       ),
       @ApiResponse(
           responseCode = "404", description = "Channel 또는 User를 찾을 수 없음",
-          content = @Content(examples = @ExampleObject(value = "Channel | User with id {channelId | userId} not found"))
+          content = @Content(examples = @ExampleObject(value = "Channel | User not found: {channelId | userId}"))
       ),
       @ApiResponse(
           responseCode = "400", description = "이미 읽음 상태가 존재함",
-          content = @Content(examples = @ExampleObject(value = "ReadStatus with userId {userId} and channelId {channelId} already exists"))
+          content = @Content(examples = @ExampleObject(value = "ReadStatus already exists: userId = {userId}, channelId = {channelId}"))
       )
   })
-  ResponseEntity<ReadStatus> create(
+  ResponseEntity<ReadStatusDto> createReadStatus(
       @Parameter(description = "Message 읽음 상태 생성 정보") ReadStatusCreateRequest request
   );
 
@@ -47,10 +48,10 @@ public interface ReadStatusApi {
       ),
       @ApiResponse(
           responseCode = "404", description = "Message 읽음 상태를 찾을 수 없음",
-          content = @Content(examples = @ExampleObject(value = "ReadStatus with id {readStatusId} not found"))
+          content = @Content(examples = @ExampleObject(value = "ReadStatus not found: {readStatusId}"))
       )
   })
-  ResponseEntity<ReadStatus> update(
+  ResponseEntity<ReadStatusDto> updateReadStatus(
       @Parameter(description = "수정할 읽음 상태 ID") UUID readStatusId,
       @Parameter(description = "수정할 읽음 상태 정보") ReadStatusUpdateRequest request
   );
@@ -62,7 +63,7 @@ public interface ReadStatusApi {
           content = @Content(array = @ArraySchema(schema = @Schema(implementation = ReadStatus.class)))
       )
   })
-  ResponseEntity<List<ReadStatus>> findAllByUserId(
+  ResponseEntity<List<ReadStatusDto>> getReadStatusesOfUser(
       @Parameter(description = "조회할 User ID") UUID userId
   );
 }

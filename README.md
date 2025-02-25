@@ -10,10 +10,9 @@
 | `POST` | `/api/auth/login` | 로그인 |
 
 #### **로그인 요청 예제**
-```json
 POST /api/auth/login
 Content-Type: application/json
-
+```json
 {
   "username": "testuser",
   "password": "testpassword"
@@ -43,10 +42,9 @@ Content-Type: application/json
 | `PATCH` | `/api/users/{userId}/userStatus` | 유저 온라인 상태 업데이트 |
 
 #### **유저 등록 요청 예제**
-```json
 POST /api/users
 Content-Type: multipart/form-data
-
+```json
 {
   "userCreateRequest": {
     "username": "newuser",
@@ -79,10 +77,9 @@ Content-Type: multipart/form-data
 | `DELETE` | `/api/messages/{messageId}` | 메시지 삭제 |
 
 #### **메시지 생성 요청 예제**
-```json
 POST /api/messages
 Content-Type: multipart/form-data
-
+```json
 {
   "messageCreateRequest": {
     "content": "새로운 메시지",
@@ -116,10 +113,9 @@ Content-Type: multipart/form-data
 | `DELETE` | `/api/channels/{channelId}` | 채널 삭제 |
 
 #### **퍼블릭 채널 생성 요청 예제**
-```json
 POST /api/channels/public
 Content-Type: application/json
-
+```json
 {
   "name": "General",
   "description": "공식 채널"
